@@ -1,0 +1,27 @@
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: fiscal-manager-db
+    restart: always
+    environment:
+      # Credenciais iniciais
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: fiscal_db
+      MYSQL_USER: fiscal_user
+      MYSQL_PASSWORD: fiscal_password
+    ports:
+      - "3306:3306"
+    volumes:
+      # Persiste os dados na pasta oculta .docker-data no seu PC
+      - ./.docker-data/mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+
+  adminer:
+    image: adminer
+    container_name: fiscal-manager-adminer
+    restart: always
+    ports:
+      - "8080:8080" # Acesse localhost:8080 para ver o banco visualmente
