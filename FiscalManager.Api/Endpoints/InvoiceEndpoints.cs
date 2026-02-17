@@ -16,6 +16,8 @@ public static class InvoiceEndpoints
         group.MapPost("/", CreateInvoice);
         // Recuperar notas
         group.MapGet("/", GetAllInvoices);
+        // Apagar
+        group.MapDelete("/{id}", DeleteInvoice);
     }
 
     private static async Task<IResult> CreateInvoice(
@@ -33,6 +35,13 @@ public static class InvoiceEndpoints
         // Chama o serviço passando mês e ano (se vierem nulos, traz tudo)
         var result = await service.GetAllAsync(filters.Month, filters.Year);
         return Results.Ok(result);
+    }
+
+    private static async Task<IResult> DeleteInvoice(int id, IInvoiceService service)
+    {
+        var deleted = await service.DeleteAsync(id);
+
+        return deleted ? Results.NoContent() : Results.NotFound();
     }
 }
 
