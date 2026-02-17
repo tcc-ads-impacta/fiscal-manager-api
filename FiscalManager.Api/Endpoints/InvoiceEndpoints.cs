@@ -9,15 +9,13 @@ public static class InvoiceEndpoints
 {
     public static void MapInvoiceEndpoints(this IEndpointRouteBuilder app)
     {
-        //Todas as rotas abaixo começarão com /api/invoices
         var group = app.MapGroup("/api/invoices")
                        .DisableAntiforgery();
 
-        // POST: /api/invoices
-        group.MapPost("/cadastrar", CreateInvoice);
-
-        // GET: /api/invoices (Faremos a seguir)
-        // group.MapGet("/", GetAllInvoices)
+        // Cadastro
+        group.MapPost("/", CreateInvoice);
+        // Recuperar notas
+        group.MapGet("/", GetAllInvoices);
     }
 
     private static async Task<IResult> CreateInvoice(
@@ -26,6 +24,15 @@ public static class InvoiceEndpoints
     {
         var result = await service.CreateAsync(dto);
         return Results.Created($"/api/invoices/{result.Id}", result);
+    }
+
+    private static async Task<IResult> GetAllInvoices(
+    IInvoiceService service,
+    [AsParameters] InvoiceFilterRequest filters)
+    {
+        // Chama o serviço passando mês e ano (se vierem nulos, traz tudo)
+        var result = await service.GetAllAsync(filters.Month, filters.Year);
+        return Results.Ok(result);
     }
 }
 
