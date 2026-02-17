@@ -151,5 +151,54 @@ public class InvoiceService : IInvoiceService
 
         return true;
     }
+
+    public async Task<InvoiceResponseDto?> UpdateAsync(int id, UpdateInvoiceDto dto)
+    {
+        var entity = await _context.Invoices.FindAsync(id);
+        if (entity is null) return null;
+
+        // 1. Atualiza dados cadastrais
+        entity.Description = dto.Description;
+        entity.Amount = dto.Amount;
+        entity.Date = dto.Date;
+
+        // 2. Lógica de Troca de Arquivo (Swap)
+        if (dto.File is not null)
+        {
+            // A. Remove o arquivo antigo (se existir)
+            if (File.Exists(entity.FilePath))
+            {
+                try { File.Delete(entity.FilePath); } catch { /* Logar erro de IO */ }
+            }
+
+            // B. Salva o novo arquivo
+            var extension = Path.GetExtension(dto.File.FileName);
+            var fileName = $"{Guid.NewGuid()}{extension}";
+            var fullPath = Path.Combine(_uploadPath, fileName);
+
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                await dto.File.CopyToAsync(stream);
+            }
+
+            // C. Atualiza referência no banco
+            entity.FilePath = fullPath;
+        }
+
+        // 3. Persiste
+        _context.Invoices.Update(entity);
+        await _context.SaveChangesAsync();
+
+        // 4. Retorna DTO atualizado (recalculando a URL pública)
+        var publicUrl = $"/files/{Path.GetFileName(entity.FilePath)}";
+
+        return new InvoiceResponseDto(
+            entity.Id,
+            entity.Description,
+            entity.Amount,
+            entity.Date,
+            publicUrl
+        );
+    }
 }
 

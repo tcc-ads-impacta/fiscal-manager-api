@@ -8,5 +8,6 @@ public interface IInvoiceService
     Task<InvoiceResponseDto> CreateAsync(CreateInvoiceDto dto);
     Task<IEnumerable<InvoiceItemDto>> GetAllAsync(int? month = null, int? year = null);
     Task<bool> DeleteAsync(int id);
+    Task<InvoiceResponseDto?> UpdateAsync(int id, UpdateInvoiceDto dto);
 }
 

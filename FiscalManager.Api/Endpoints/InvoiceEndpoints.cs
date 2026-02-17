@@ -18,6 +18,8 @@ public static class InvoiceEndpoints
         group.MapGet("/", GetAllInvoices);
         // Apagar
         group.MapDelete("/{id}", DeleteInvoice);
+        // Atualizar
+        group.MapPut("/{id}", UpdateInvoice).DisableAntiforgery();
     }
 
     private static async Task<IResult> CreateInvoice(
@@ -42,6 +44,19 @@ public static class InvoiceEndpoints
         var deleted = await service.DeleteAsync(id);
 
         return deleted ? Results.NoContent() : Results.NotFound();
+    }
+
+    private static async Task<IResult> UpdateInvoice(
+    int id,
+    [FromForm] UpdateInvoiceDto dto,
+    IInvoiceService service)
+    {
+        var result = await service.UpdateAsync(id, dto);
+
+        if (result is null)
+            return Results.NotFound();
+
+        return Results.Ok(result);
     }
 }
 
