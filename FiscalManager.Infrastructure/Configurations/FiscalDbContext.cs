@@ -15,6 +15,7 @@ namespace FiscalManager.Infrastructure.Configurations
         {
             // Precisão decimal para valores monetários
             modelBuilder.Entity<Invoice>(entity => {
+                entity.Property(e => e.Id).UseMySqlIdentityColumn();
                 entity.Property(e => e.Amount).HasPrecision(18, 2);
                 entity.Property(e => e.Description).IsRequired().HasMaxLength(255);
             });

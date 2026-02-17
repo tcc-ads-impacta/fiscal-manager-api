@@ -429,3 +429,6 @@ FodyWeavers.xsd
 
 # Docker data
 .docker-data/
+
+# Ignorar pastas de Uploads em qualquer nível do projeto
+**/Uploads/
