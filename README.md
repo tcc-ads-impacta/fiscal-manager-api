@@ -19,7 +19,7 @@ docker compose pull
 docker compose up -d
 ```
 
-Link: [Download Docker Compose](https://drive.google.com/file/d/1DJbu-uzjxiUbG_Qnrr2PQnUhuguwFsH7/view?usp=drive_link)
+Link: [Download Docker Compose](https://drive.google.com/drive/folders/1nJpOETbchEwXXFAcdvM94QPpnIJfp0Qd?usp=sharing)
 
 ## Tech Stack
 
