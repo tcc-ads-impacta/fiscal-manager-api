@@ -103,7 +103,7 @@ public class InvoiceService : IInvoiceService
             else if (daysDiff <= 3) // 3 dias para vencer
             {
                 status = "Próxima do Vencimento";
-                severity = "warning"; // Amarelo
+                severity = "warn"; // Amarelo
             }
             else
             {
