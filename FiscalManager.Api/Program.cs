@@ -2,6 +2,8 @@ using FiscalManager.Api.Endpoints;
 using FiscalManager.Infrastructure.Extensions;
 using Scalar.AspNetCore;
 using Microsoft.Extensions.FileProviders;
+using FiscalManager.Infrastructure.Configurations;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,11 +24,18 @@ builder.Services.AddCors(options =>
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-//Configuração com o banco de dados (infrastructure)
+//Configuraï¿½ï¿½o com o banco de dados (infrastructure)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddInfrastructure(connectionString!);
 
 var app = builder.Build();
+
+// Aplica migrations pendentes automaticamente na inicializaÃ§Ã£o
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<FiscalDbContext>();
+    db.Database.Migrate();
+}
 
 app.UseCors(angularPolicy);
 
@@ -40,7 +49,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-//Configurações para a pasta de uploads
+//Configuraï¿½ï¿½es para a pasta de uploads
 var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
 if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 

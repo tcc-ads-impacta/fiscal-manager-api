@@ -1,0 +1,7 @@
+.docker-data
+**/*.sock
+bin
+obj
+.vs
+.git
+.gitignore
