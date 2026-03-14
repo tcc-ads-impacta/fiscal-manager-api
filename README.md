@@ -7,7 +7,7 @@ Backend da aplicação de Controle Doméstico de Notas Fiscais. Este projeto foi
 A solução segue os princípios da **Clean Architecture**, isolando o domínio da aplicação de detalhes de infraestrutura e apresentação. O objetivo é garantir manutenibilidade e testabilidade, mesmo em um escopo de MVP.
 
 ## Docker
-Para facilitar os testes, disponibilizei o arquivo `docker-compose.yml` no Google Drive.  
+Para facilitar os testes, disponibilizei o arquivo `docker-compose.yml` Link: [Download Docker Compose](https://gist.github.com/naassom-pedro/c7f3bdd33486a473f87f007f53b76547).  
 Com ele, você pode executar todo o projeto diretamente via Docker, sem precisar baixar o código-fonte.
 
 1. Baixe o arquivo `docker-compose.yml` no link compartilhado do Google Drive.
@@ -18,9 +18,6 @@ Com ele, você pode executar todo o projeto diretamente via Docker, sem precisar
 docker compose pull
 docker compose up -d
 ```
-
-Link: [Download Docker Compose](https://drive.google.com/drive/folders/1nJpOETbchEwXXFAcdvM94QPpnIJfp0Qd?usp=sharing)
-
 ## Tech Stack
 
 * **Runtime:** .NET 9
