@@ -14,10 +14,16 @@ public static class InvoiceEndpoints
 
         // Cadastro
         group.MapPost("/", CreateInvoice);
+
         // Recuperar notas
         group.MapGet("/", GetAllInvoices);
+
+        // Buscar
+        group.MapGet("/search", SearchInvoices);
+
         // Apagar
         group.MapDelete("/{id}", DeleteInvoice);
+
         // Atualizar
         group.MapPut("/{id}", UpdateInvoice).DisableAntiforgery();
     }
@@ -36,6 +42,15 @@ public static class InvoiceEndpoints
     {
         // Chama o serviço passando mês e ano (se vierem nulos, traz tudo)
         var result = await service.GetAllAsync(filters.Month, filters.Year);
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> SearchInvoices(
+    IInvoiceService service,
+    [FromQuery] string text)
+    {
+        // Chama o serviço passando mês e ano (se vierem nulos, traz tudo)
+        var result = await service.SearchInvoicesAsync(text);
         return Results.Ok(result);
     }
 

@@ -200,5 +200,60 @@ public class InvoiceService : IInvoiceService
             publicUrl
         );
     }
+
+    public async Task<List<InvoiceItemDto>> SearchInvoicesAsync(string? text = null)
+    {
+        var query = _context.Invoices.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(text))
+        {                        
+            query = query.Where(x => x.Description.Contains(text));            
+        }
+
+        // Ordena
+        query = query.OrderBy(x => x.Date);
+
+        var entities = await query.ToListAsync();
+
+        var today = DateTime.UtcNow.Date;
+
+        return entities.Select(entity =>
+        {
+            var fileName = Path.GetFileName(entity.FilePath);
+            var publicUrl = $"/files/{fileName}";
+
+            var daysDiff = (entity.Date.Date - today).TotalDays;
+            string status;
+            string severity;
+
+            if (daysDiff < 0)
+            {
+                status = "Vencida";
+                severity = "danger";
+            }
+            else if (daysDiff <= 3)
+            {
+                status = "Próxima do Vencimento";
+                severity = "warn";
+            }
+            else
+            {
+                status = "Em Aberto";
+                severity = "success";
+            }
+
+            return new InvoiceItemDto(
+                entity.Id,
+                entity.Description,
+                entity.Amount,
+                entity.Date,
+                publicUrl,
+                status,
+                severity,
+                (int)daysDiff
+            );
+        }).ToList();
+
+    }
 }
 
